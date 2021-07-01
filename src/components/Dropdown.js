@@ -5,12 +5,19 @@ const Dropdown = ({ options, selected, onSelectedChange }) => {
     const ref =useRef()
 
     useEffect(() => {
-        document.body.addEventListener('click', (event) => {
+        const onBodyClick = event => {
             // to check if the target is inside our ref
             if (ref.current.contains(event.target)) return
             // outside our ref we would scaffold it
             setOpen(false)
-        }, { capture: true })
+        }
+
+        document.body.addEventListener("click", onBodyClick, { capture: true })
+ 
+        // Cleanup fn
+        return () => {
+            document.body.removeEventListener("click", onBodyClick, { capture: true })
+        }
     }, []) // An Empty array assures that it runs only one time
 
     const renderedOptions = options.map((option) => {
@@ -49,19 +56,3 @@ const Dropdown = ({ options, selected, onSelectedChange }) => {
 }
 
 export default Dropdown
-
-// useEffect(() => {
-//     const onBodyClick = (event) => {
-//       if (ref.current.contains(event.target)) {
-//         return;
-//       }
-//       setOpen(false);
-//     };
-//     document.body.addEventListener("click", onBodyClick, { capture: true });
- 
-//     return () => {
-//       document.body.removeEventListener("click", onBodyClick, {
-//         capture: true,
-//       });
-//     };
-//   }, []);
